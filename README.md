@@ -16,4 +16,4 @@ GET /allMessage
 POST /newMessage?idUser={idUser}&userName={userName}&message={message}
 
 Адрес сервера:
-https://ahj-hw8.herokuapp.com/
+https://ahj-hw8-server.herokuapp.com/
