@@ -24,6 +24,7 @@
 	},
 	"dependencies": {
 		"@koa/cors": "^3.3.0",
+		"filereader": "^0.10.3",
 		"forever": "^4.0.3",
 		"koa": "^2.13.4",
 		"koa-body": "^5.0.0",

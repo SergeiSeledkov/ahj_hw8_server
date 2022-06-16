@@ -9,12 +9,14 @@ const Controller = require("./Controller");
 const controller = new Controller();
 const PORT = process.env.PORT || 7070;
 const server = http.createServer(app.callback());
+const WS = require('ws');
+const wsServer = new WS.Server({ server });
 
 app.use(koaBody({ text: true, urlencoded: true, json: true, multipart: true }));
 
 app.use(cors());
 
-router.get('/allUser', async (ctx, next) => {
+router.get('/allUser', async (ctx) => {
 	if (ctx.request.method === 'GET') {
 		ctx.response.body = controller.getAllUser();
 		ctx.response.status = 200;
@@ -24,7 +26,7 @@ router.get('/allUser', async (ctx, next) => {
 	}
 });
 
-router.post('/newUser', async (ctx, next) => {
+router.post('/newUser', async (ctx) => {
 	const { name } = ctx.request.query;
 
 	if (ctx.request.method === 'POST') {
@@ -43,7 +45,7 @@ router.post('/newUser', async (ctx, next) => {
 	}
 });
 
-router.delete('/deleteUser', async (ctx, next) => {
+router.delete('/deleteUser', async (ctx) => {
 	const { id } = ctx.request.query;
 
 	if (ctx.request.method === 'DELETE') {
@@ -62,7 +64,7 @@ router.delete('/deleteUser', async (ctx, next) => {
 	}
 });
 
-router.get('/allMessage', async (ctx, next) => {
+router.get('/allMessage', async (ctx) => {
 	if (ctx.request.method === 'GET') {
 		ctx.response.body = controller.getAllMessage();
 		ctx.response.status = 200;
@@ -72,7 +74,7 @@ router.get('/allMessage', async (ctx, next) => {
 	}
 });
 
-router.post('/newMessage', async (ctx, next) => {
+router.post('/newMessage', async (ctx) => {
 	const { idUser, userName, message } = ctx.request.query;
 
 	if (ctx.request.method === 'POST') {
@@ -87,5 +89,14 @@ router.post('/newMessage', async (ctx, next) => {
 app.use(router.routes());
 app.use(router.allowedMethods());
 
+wsServer.on('connection', (ws, req) => {
+	ws.on('message', msg => {
+		Array.from(wsServer.clients)
+			.filter(o => o.readyState === WS.OPEN)
+			.forEach(o => {
+				o.send(msg + '');
+			});
+	});
+});
 
 server.listen(PORT, () => console.log(`server started on ${PORT}`));
