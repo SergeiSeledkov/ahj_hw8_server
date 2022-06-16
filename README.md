@@ -13,7 +13,7 @@ DELETE /deleteUser?id=${id}
 GET /allMessage
 
 Создание нового сообщения:
-POST /newMessage?idUser=${idUser}&userName=${userName}&message=${message}
+POST /newMessage?idUser={idUser}&userName={userName}&message={message}
 
 Адрес сервера:
 https://ahj-hw8.herokuapp.com/
